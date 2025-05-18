@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="textView7" type="id" />
+    <item name="resSum" type="id" />
+    <item name="btnIncrease" type="id" />
+    <item name="tvQuantity" type="id" />
+    <item name="btnDecrease" type="id" />
+</resources>

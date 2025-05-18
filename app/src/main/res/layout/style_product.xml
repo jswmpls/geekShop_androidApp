@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="190dp"
+    android:layout_height="310dp"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/style_button_exit"
+    android:layout_marginLeft="5dp"
+    android:layout_marginBottom="5dp">
+
+    <ImageView
+        android:id="@+id/imageProd"
+        android:layout_width="match_parent"
+        android:layout_height="110dp" />
+
+    <TextView
+        android:id="@+id/nameProd"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+        android:fontFamily="@font/urbanist"
+        android:gravity="center"
+        android:text="TextView"
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/costProd"
+        android:layout_width="match_parent"
+        android:layout_height="29dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+        android:fontFamily="@font/urbanist"
+        android:gravity="center"
+        android:text="TextView"
+        android:textColor="@color/white"
+        android:textSize="15dp"
+        android:textStyle="bold"
+        tools:ignore="TextSizeCheck" />
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/AddToCart"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@drawable/style_button"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/urbanist"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:text="В корзину"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        />
+</LinearLayout>

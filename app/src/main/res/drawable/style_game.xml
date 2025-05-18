@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape android:shape="rectangle">
+            <!-- Градиентный фон (от темно-синего к фиолетовому) -->
+            <gradient
+                android:startColor="#0C7C54"
+                android:endColor="#3DB79A"
+                android:angle="135"
+                android:type="linear"/>
+            <corners android:radius="20dp"/>
+        </shape>
+    </item>
+</selector>

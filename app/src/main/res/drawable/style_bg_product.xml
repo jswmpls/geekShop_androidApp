@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <layer-list>
+            <!-- Градиентная обводка (внешний слой) -->
+            <item>
+                <shape android:shape="rectangle">
+                    <gradient
+                        android:endColor="#09FBD3"
+                        android:angle="135"
+                        android:type="linear"/>
+                    <corners android:radius="32dp"/> <!-- На 2dp больше, чем у основного фона -->
+                </shape>
+            </item>
+
+            <!-- Основной фон (внутренний слой с отступом) -->
+            <item android:left="3dp" android:top="3dp" android:right="3dp" android:bottom="3dp">
+                <shape android:shape="rectangle">
+                    <gradient
+                        android:startColor="#21232F"
+                        android:endColor="#2E1371"
+                        android:angle="135"
+                        android:type="linear"/>
+                    <corners android:radius="30dp"/>
+                </shape>
+            </item>
+        </layer-list>
+    </item>
+</selector>
