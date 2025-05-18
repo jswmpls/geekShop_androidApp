@@ -1,6 +1,7 @@
 package com.example.geekshop.View
 
 import CategoryAdapter
+import com.example.geekshop.R
 import android.app.Dialog
 import android.content.Intent
 import android.graphics.Color
@@ -17,7 +18,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.geekshop.R
 import com.example.geekshop.data.adapters.ProductAdapter
 import com.example.geekshop.data.model.Category
 import com.example.geekshop.data.model.Products
