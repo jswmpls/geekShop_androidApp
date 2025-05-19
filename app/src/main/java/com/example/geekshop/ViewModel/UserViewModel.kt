@@ -6,19 +6,16 @@ import com.example.geekshop.repository.UserRepository
 import kotlinx.coroutines.launch
 
 class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
-
     private val _registrationResult = MutableLiveData<Long>()
-    val registrationResult: LiveData<Long> = _registrationResult
+    val registrationResult: LiveData<Long> get() = _registrationResult
 
     private val _authenticationResult = MutableLiveData<Users?>()
-    val authenticationResult: LiveData<Users?> = _authenticationResult
+    val authenticationResult: LiveData<Users?> get() = _authenticationResult
 
     private val _isLoginExists = MutableLiveData<Boolean>()
-    val isLoginExists: LiveData<Boolean> = _isLoginExists
+    val isLoginExists: LiveData<Boolean> get() = _isLoginExists
 
-    private val _nextUserId = MutableLiveData<Int>()
-    val nextUserId: LiveData<Int> = _nextUserId
-
+    // Регистрация нового пользователя
     fun registerUser(name: String, login: String, password: String) {
         viewModelScope.launch {
             val nextId = userRepository.getNextUserId()
@@ -28,6 +25,7 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
         }
     }
 
+    // Проверка существования логина
     fun checkLoginExists(login: String) {
         viewModelScope.launch {
             val exists = userRepository.isLoginExists(login)
@@ -35,13 +33,7 @@ class UserViewModel(private val userRepository: UserRepository) : ViewModel() {
         }
     }
 
-    fun getNextUserId() {
-        viewModelScope.launch {
-            val id = userRepository.getNextUserId()
-            _nextUserId.postValue(id)
-        }
-    }
-
+    // Авторизация пользователя
     fun authenticateUser(login: String, password: String) {
         viewModelScope.launch {
             val user = userRepository.authenticateUser(login, password)

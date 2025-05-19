@@ -19,7 +19,6 @@ import com.example.geekshop.viewmodel.UserViewModel
 import com.example.geekshop.viewmodel.UserViewModelFactory
 
 class AuthActivity : AppCompatActivity() {
-
     private lateinit var userViewModel: UserViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,30 +26,28 @@ class AuthActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_auth)
 
-        // Initialize ViewModel
+        // Инициализация ViewModel
         val userRepository = UserRepository(SQLite.getInstance(applicationContext))
         val viewModelFactory = UserViewModelFactory(userRepository)
         userViewModel = ViewModelProvider(this, viewModelFactory)[UserViewModel::class.java]
 
-        // Setup edge-to-edge
+        // Настройка edge-to-edge
         setupEdgeToEdge()
 
-        // Initialize UI elements
+        // Инициализация элементов UI
         val userLogin: EditText = findViewById(R.id.editText_login_auth)
         val userPassword: EditText = findViewById(R.id.editText_password_auth)
         val btnAuth: AppCompatButton = findViewById(R.id.btn_auth)
         val btnGoReg: TextView = findViewById(R.id.btn_go_reg)
 
-        // Set up auth button click listener
+        // Обработка клика по кнопке авторизации
         btnAuth.setOnClickListener {
             val login = userLogin.text.toString().trim()
             val password = userPassword.text.toString().trim()
-
             if (login.isEmpty() || password.isEmpty()) {
                 showToast("Заполните все поля")
                 return@setOnClickListener
             }
-
             userViewModel.authenticateUser(login, password)
             userViewModel.authenticationResult.observe(this) { user ->
                 if (user != null) {
@@ -62,7 +59,7 @@ class AuthActivity : AppCompatActivity() {
             }
         }
 
-        // Set up registration redirect button click listener
+        // Обработка клика по кнопке регистрации
         btnGoReg.setOnClickListener {
             navigateToRegistration()
         }
