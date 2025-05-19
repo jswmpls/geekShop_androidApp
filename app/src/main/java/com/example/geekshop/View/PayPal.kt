@@ -15,29 +15,23 @@ import com.example.geekshop.data.db.SQLite
 import com.example.geekshop.repository.PayPalRepository
 import com.example.geekshop.viewmodel.PayPalViewModel
 
+/**
+ * Экран обработки платежа через PayPal
+ */
 class PayPal : AppCompatActivity() {
 
+    // SharedPreferences для хранения данных пользователя
     private lateinit var sharedPref: SharedPreferences
     private lateinit var viewModel: PayPalViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        enableEdgeToEdge() // Включаем edge-to-edge отображение
         setContentView(R.layout.activity_pay_pal)
 
         setupEdgeToEdge()
-
-        // Инициализация SharedPreferences
-        sharedPref = getSharedPreferences("user_prefs", MODE_PRIVATE)
-
-        // Инициализация Repository и ViewModel
-        val repository = PayPalRepository(SQLite.getInstance(this))
-        viewModel = ViewModelProvider(this, PayPalViewModel.provideFactory(repository))[PayPalViewModel::class.java]
-
-        // Наблюдение за результатом обработки платежа
-        observePaymentResult()
-
-        // Настройка кнопки оплаты
+        initSharedPreferences()
+        initViewModel()
         setupPayButton()
     }
 
@@ -49,30 +43,44 @@ class PayPal : AppCompatActivity() {
         }
     }
 
+    private fun initSharedPreferences() {
+        sharedPref = getSharedPreferences("user_prefs", MODE_PRIVATE)
+    }
+
+    private fun initViewModel() {
+        val repository = PayPalRepository(SQLite.getInstance(this))
+        viewModel = ViewModelProvider(
+            this,
+            PayPalViewModel.provideFactory(repository)
+        )[PayPalViewModel::class.java]
+
+        // Наблюдаем за результатами платежа
+        observePaymentResult()
+    }
+
     private fun setupPayButton() {
         findViewById<Button>(R.id.button_buy).setOnClickListener {
-            val userId = sharedPref.getInt("current_user_id", -1)
+            val userId = sharedPref.getInt("current_user_id", -1).takeIf { it != -1 }
+                ?: run {
+                    Toast.makeText(this, "Ошибка: пользователь не найден", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+
             val purchaseAmount = sharedPref.getInt("purchase_amount", 0)
-            val usedBonus = sharedPref.getInt("used_bonus", 0)
 
-            if (userId == -1) {
-                Toast.makeText(this, "Ошибка: пользователь не найден", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-
-            // Измененная проверка - разрешаем покупку за 0 рублей
+            // Проверяем корректность суммы (разрешены покупки за 0 рублей)
             if (purchaseAmount < 0) {
                 Toast.makeText(this, "Ошибка: сумма покупки некорректна", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
 
+            val usedBonus = sharedPref.getInt("used_bonus", 0)
             viewModel.processPayment(userId, purchaseAmount, usedBonus)
         }
     }
 
     private fun observePaymentResult() {
-        viewModel.bonusUpdateResult.observe(this) { result ->
-            val (_, bonusToAdd) = result
+        viewModel.bonusUpdateResult.observe(this) { (_, bonusToAdd) ->
             Toast.makeText(
                 this,
                 "Покупка совершена!\nНачислено $bonusToAdd бонусов",
@@ -90,11 +98,12 @@ class PayPal : AppCompatActivity() {
     }
 
     private fun navigateToMain() {
-        // Очистка временных данных
-        val editor = sharedPref.edit()
-        editor.remove("purchase_amount")
-        editor.remove("used_bonus")
-        editor.apply()
+        // Очищаем временные данные о покупке
+        with(sharedPref.edit()) {
+            remove("purchase_amount")
+            remove("used_bonus")
+            apply()
+        }
 
         startActivity(Intent(this, MainActivity::class.java))
         finish()
