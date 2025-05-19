@@ -103,28 +103,26 @@ class SQLite private constructor(context: Context) : SQLiteOpenHelper(context, "
 
     // Методы для работы с пользователями
 
-    /**
-     * Добавление нового пользователя
-     * @param user Объект пользователя
-     * @return ID добавленного пользователя
-     */
-    fun addUser(user: Users): Long {
-        val values = ContentValues().apply {
-            put("id", user.id)
-            put("name", user.name)
-            put("login", user.login)
-            put("password", user.password)
-            put("bonus", user.bonus)
-        }
-        return writableDatabase.insert("users", null, values)
+    fun isLoginExists(login: String): Boolean {
+        return readableDatabase.rawQuery(
+            "SELECT id FROM users WHERE login = ?",
+            arrayOf(login)
+        ).use { it.count > 0 }
     }
 
-    /**
-     * Проверка существования пользователя
-     * @param login Логин пользователя
-     * @param password Пароль пользователя
-     * @return true если пользователь существует
-     */
+    fun getNextUserId(): Int {
+        return readableDatabase.rawQuery(
+            "SELECT MAX(id) FROM users",
+            null
+        ).use { cursor ->
+            if (cursor.moveToFirst() && !cursor.isNull(0)) {
+                cursor.getInt(0) + 1
+            } else {
+                1
+            }
+        }
+    }
+
     fun getUser(login: String, password: String): Boolean {
         return readableDatabase.rawQuery(
             "SELECT * FROM users WHERE login = ? AND password = ? LIMIT 1",
@@ -132,12 +130,6 @@ class SQLite private constructor(context: Context) : SQLiteOpenHelper(context, "
         ).use { it.count > 0 }
     }
 
-    /**
-     * Получение данных пользователя по логину
-     * @param login Логин пользователя
-     * @return Объект пользователя
-     * @throws Exception если пользователь не найден
-     */
     fun getUserData(login: String): Users {
         return readableDatabase.rawQuery(
             "SELECT * FROM users WHERE login = ? LIMIT 1",
@@ -148,40 +140,11 @@ class SQLite private constructor(context: Context) : SQLiteOpenHelper(context, "
                     id = cursor.getInt(0),
                     name = cursor.getString(1),
                     login = cursor.getString(2),
-                    password = "", // Пароль не возвращаем
+                    password = "",
                     bonus = cursor.getInt(4)
                 )
             } else {
-                throw Exception("User not found")
-            }
-        }
-    }
-
-    /**
-     * Проверка существования логина
-     * @param login Логин для проверки
-     * @return true если логин уже существует
-     */
-    fun isLoginExists(login: String): Boolean {
-        return readableDatabase.rawQuery(
-            "SELECT id FROM users WHERE login = ?",
-            arrayOf(login)
-        ).use { it.count > 0 }
-    }
-
-    /**
-     * Получение следующего ID для нового пользователя
-     * @return Следующий доступный ID
-     */
-    fun getNextUserId(): Int {
-        return readableDatabase.rawQuery(
-            "SELECT MAX(id) FROM users",
-            null
-        ).use { cursor ->
-            if (cursor.moveToFirst() && !cursor.isNull(0)) {
-                cursor.getInt(0) + 1
-            } else {
-                1
+                throw Exception("Пользователь не найден")
             }
         }
     }
@@ -599,4 +562,4 @@ class SQLite private constructor(context: Context) : SQLiteOpenHelper(context, "
                 )
             )
         }
-        }
+}

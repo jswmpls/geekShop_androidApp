@@ -11,22 +11,34 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.geekshop.R
 import com.example.geekshop.data.model.Products
 
+/**
+ * Адаптер для отображения списка товаров в RecyclerView
+ */
 class ProductAdapter(
     private var products: List<Products> = emptyList(),
     private val listener: ProductActionListener
 ) : RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
 
+    /**
+     * Интерфейс для обработки действий с товарами
+     */
     interface ProductActionListener {
         fun onProductClick(product: Products)
         fun onAddToCartClick(product: Products)
     }
 
+    /**
+     * ViewHolder для отображения отдельного товара
+     */
     inner class ProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val nameView: TextView = itemView.findViewById(R.id.nameProd)
         private val priceView: TextView = itemView.findViewById(R.id.costProd)
         private val imageView: ImageView = itemView.findViewById(R.id.imageProd)
         private val addToCartBtn: Button = itemView.findViewById(R.id.AddToCart)
 
+        /**
+         * Привязка данных товара к View
+         */
         fun bind(product: Products) {
             nameView.text = product.Name
             priceView.text = product.Cost
@@ -49,6 +61,9 @@ class ProductAdapter(
 
     override fun getItemCount(): Int = products.size
 
+    /**
+     * Обновление списка товаров с анимацией изменений
+     */
     fun updateProducts(newProducts: List<Products>) {
         val diffCallback = ProductDiffCallback(products, newProducts)
         val diffResult = DiffUtil.calculateDiff(diffCallback)
@@ -56,6 +71,9 @@ class ProductAdapter(
         diffResult.dispatchUpdatesTo(this)
     }
 
+    /**
+     * Callback для сравнения старых и новых данных товаров
+     */
     private class ProductDiffCallback(
         private val oldList: List<Products>,
         private val newList: List<Products>

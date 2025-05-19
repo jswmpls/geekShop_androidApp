@@ -2,7 +2,6 @@ package com.example.geekshop.View
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
@@ -19,7 +18,6 @@ import com.example.geekshop.viewmodel.UserViewModel
 import com.example.geekshop.viewmodel.UserViewModelFactory
 
 class RegActivity : AppCompatActivity() {
-
     private lateinit var userViewModel: UserViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,19 +25,19 @@ class RegActivity : AppCompatActivity() {
         enableEdgeToEdge()
         setContentView(R.layout.activity_reg)
 
-        // Initialize ViewModel
+        // Инициализация ViewModel
         val userRepository = UserRepository(SQLite.getInstance(applicationContext))
         val viewModelFactory = UserViewModelFactory(userRepository)
         userViewModel = ViewModelProvider(this, viewModelFactory)[UserViewModel::class.java]
 
-        // Setup edge-to-edge
+        // Настройка edge-to-edge
         setupEdgeToEdge()
 
-        // Setup buttons
+        // Настройка кнопок
         setupRegisterButton()
         setupAuthRedirectButton()
 
-        // Observe LiveData
+        // Подписка на результаты регистрации и проверки логина
         observeRegistrationResult()
         observeIsLoginExists()
     }
@@ -57,9 +55,7 @@ class RegActivity : AppCompatActivity() {
             val name = findViewById<EditText>(R.id.editText_name).text.toString().trim()
             val login = findViewById<EditText>(R.id.editText_login).text.toString().trim()
             val password = findViewById<EditText>(R.id.editText_password).text.toString().trim()
-
             if (!validateInput(name, login, password)) return@setOnClickListener
-
             // Проверяем существование логина
             userViewModel.checkLoginExists(login)
         }
@@ -74,7 +70,6 @@ class RegActivity : AppCompatActivity() {
                 val name = findViewById<EditText>(R.id.editText_name).text.toString().trim()
                 val login = findViewById<EditText>(R.id.editText_login).text.toString().trim()
                 val password = findViewById<EditText>(R.id.editText_password).text.toString().trim()
-
                 userViewModel.registerUser(name, login, password)
             }
         }
@@ -98,15 +93,15 @@ class RegActivity : AppCompatActivity() {
         userViewModel.registrationResult.observe(this) { userId ->
             if (userId != -1L) {
                 Toast.makeText(this, "Регистрация успешна!", Toast.LENGTH_SHORT).show()
-                navigateToMain()
+                navigateToAuth()
             } else {
                 showToast("Ошибка при создании пользователя")
             }
         }
     }
 
-    private fun navigateToMain() {
-        startActivity(Intent(this, MainActivity::class.java))
+    private fun navigateToAuth() {
+        startActivity(Intent(this, AuthActivity::class.java))
         finish()
     }
 
