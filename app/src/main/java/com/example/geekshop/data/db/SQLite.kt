@@ -562,4 +562,4 @@ class SQLite private constructor(context: Context) : SQLiteOpenHelper(context, "
                 )
             )
         }
-        }
+}

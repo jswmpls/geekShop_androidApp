@@ -4,18 +4,19 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.geekshop.repository.CartRepository
-import com.example.geekshop.viewmodel.CartViewModel
 
+/**
+ * Фабрика для создания экземпляра CartViewModel
+ */
 class CartViewModelFactory(
     private val repository: CartRepository,
     private val appContext: Context
 ) : ViewModelProvider.Factory {
+    @Suppress("UNCHECKED_CAST")
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(CartViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
             return CartViewModel(repository, appContext) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
-
